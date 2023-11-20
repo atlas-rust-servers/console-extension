@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <AssemblyName>Oxide.Ext.ConsoleExt</AssemblyName>
+        <RootNamespace>Oxide.Ext.ConsoleExt</RootNamespace>
+
+        <!-- removes the .pdb file from the output folder -->
+        <DebugType>embedded</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="Oxide.Core">
+            <HintPath>..\dependencies\Oxide.Core.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule">
+            <HintPath>..\dependencies\UnityEngine.CoreModule.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <!-- make all references non-private, so they won't be copied to the output folder -->
+    <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
+        <ItemGroup>
+            <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)"/>
+        </ItemGroup>
+    </Target>
+
+    <!-- remove the .deps.json file from the output folder -->
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="del $(OutDir)*.deps.json" />
+    </Target>
+
+</Project>
