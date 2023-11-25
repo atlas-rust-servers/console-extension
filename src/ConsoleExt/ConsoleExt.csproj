@@ -1,19 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
-        <ImplicitUsings>disable</ImplicitUsings>
+        <TargetFramework>net48</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <AssemblyName>Oxide.Ext.ConsoleExt</AssemblyName>
         <RootNamespace>Oxide.Ext.ConsoleExt</RootNamespace>
 
         <!-- removes the .pdb file from the output folder -->
         <DebugType>embedded</DebugType>
+        <LangVersion>11</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
         <Reference Include="Oxide.Core">
             <HintPath>..\dependencies\Oxide.Core.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Net.Http">
+            <HintPath>..\dependencies\System.Net.Http.dll</HintPath>
         </Reference>
         <Reference Include="UnityEngine.CoreModule">
             <HintPath>..\dependencies\UnityEngine.CoreModule.dll</HintPath>
@@ -29,7 +33,7 @@
 
     <!-- remove the .deps.json file from the output folder -->
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Exec Command="del $(OutDir)*.deps.json" />
+        <Exec Command="del $(OutDir)*.deps.json"/>
     </Target>
 
 </Project>
