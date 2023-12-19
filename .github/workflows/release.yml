@@ -51,9 +51,9 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: |
         git fetch --tags
-        $latestTag = git tag -l "Release*" --sort=-v:refname | Select-Object -First 1
+        $latestTag = git tag -l --sort=-v:refname | Select-Object -First 1
         if (-not $latestTag) {
-          $latestTag = "Release v1.0.0"
+          $latestTag = "v1.0.0"
         }
         $versionNumbers = $latestTag.TrimStart('v').Split('.')
         $newPatch = [int]$versionNumbers[2] + 1
