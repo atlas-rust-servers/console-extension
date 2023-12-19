@@ -57,7 +57,7 @@ jobs:
         }
         $versionNumbers = $latestTag.TrimStart('v').Split('.')
         $newPatch = [int]$versionNumbers[2] + 1
-        $newTag = "Release v{0}.{1}.{2}" -f $versionNumbers[0], $versionNumbers[1], $newPatch
+        $newTag = "v{0}.{1}.{2}" -f $versionNumbers[0], $versionNumbers[1], $newPatch
         git tag $newTag
         git push origin $newTag
         echo "New Tag: $newTag"
@@ -68,6 +68,6 @@ jobs:
 
     - name: Upload Release Assets
       run: |
-        gh release create ${{ env.NEW_TAG }} "src\ConsoleExt\bin\Any CPU\Release\net48\Oxide.Ext.ConsoleExt.dll" --title ${{ env.NEW_TAG }}
+        gh release create ${{ env.NEW_TAG }} "src\ConsoleExt\bin\Any CPU\Release\net48\Oxide.Ext.ConsoleExt.dll" --title "Release ${{ env.NEW_TAG }}"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
