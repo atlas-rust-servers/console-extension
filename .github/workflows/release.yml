@@ -57,7 +57,7 @@ jobs:
         }
         $versionNumbers = $latestTag.TrimStart('v').Split('.')
         $newPatch = [int]$versionNumbers[2] + 1
-        $newTag = "v{0}.{1}.{2}" -f $versionNumbers[0], $versionNumbers[1], $newPatch
+        $newTag = "Release v{0}.{1}.{2}" -f $versionNumbers[0], $versionNumbers[1], $newPatch
         git tag $newTag
         git push origin $newTag
         echo "New Tag: $newTag"
