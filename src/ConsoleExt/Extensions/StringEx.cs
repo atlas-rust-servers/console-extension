@@ -1,10 +1,13 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 
 namespace Oxide.Ext.ConsoleExt;
 
 internal static class StringEx
 {
+    private static readonly Regex s_placeholderRegex = new(@"\{(\d+)(?:\:([^}]+))?\}", RegexOptions.Compiled);
+
     [MustUseReturnValue]
     public static string ToColor(this string value, string color)
     {
@@ -23,67 +26,35 @@ internal static class StringEx
         }
         catch
         {
-            return ManuallyFormatArgs(format, args);
+            return s_placeholderRegex.Replace(format, match => EvaluatePlaceholder(match, args));
         }
     }
 
-    private static string ManuallyFormatArgs(ReadOnlySpan<char> span, object[] args)
+    private static string EvaluatePlaceholder(Match match, object[] args)
     {
-        var sb = Facepunch.Pool.Get<StringBuilder>();
-        int length = span.Length;
+        Group indexGroup = match.Groups[1];
+        Group formatGroup = match.Groups[2];
 
-        for (int i = 0; i < length; i++)
+        if (!int.TryParse(indexGroup.Value, out int index))
+            return match.Value;
+
+        if (index < 0 || index >= args.Length)
+            return match.Value;
+
+        object arg = args[index];
+        if (arg == null)
+            return string.Empty;
+
+        if (!formatGroup.Success) 
+            return arg.ToString();
+        
+        try
         {
-            char c = span[i];
-            int start = i + 1;
-
-            switch (c)
-            {
-                case '{' when start < length && span[start] == '{':
-                    sb.Append('{');
-                    i++; // Skip second '{'
-                    continue;
-                case '{':
-                {
-                    int end = start;
-                    while (end < length && span[end] != '}')
-                        end++;
-
-                    if (end >= length)
-                    {
-                        // Unclosed '{', treat as literal
-                        sb.Append('{');
-                        continue;
-                    }
-
-                    ReadOnlySpan<char> indexString = span.Slice(start, end - start);
-                    if (int.TryParse(indexString, out int index) && index >= 0 && index < args.Length)
-                    {
-                        object arg = args[index];
-                        sb.Append(arg?.ToString() ?? string.Empty);
-                    }
-                    else
-                    {
-                        // Leave invalid or missing tokens unchanged
-                        sb.Append('{').Append(indexString).Append('}');
-                    }
-
-                    i = end; // Move past '}'
-                    continue;
-                }
-                case '}' when start < length && span[start] == '}':
-                    sb.Append('}');
-                    i++; // Skip second '}'
-                    continue;
-                default:
-                    sb.Append(c);
-                    break;
-            }
+            return string.Format($"{{0:{formatGroup.Value}}}", arg);
         }
-
-        string text = sb.ToString();
-        Facepunch.Pool.FreeUnmanaged(ref sb);
-
-        return text;
+        catch
+        {
+            return arg.ToString();
+        }
     }
 }
