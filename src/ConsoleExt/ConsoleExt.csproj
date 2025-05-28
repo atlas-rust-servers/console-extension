@@ -13,6 +13,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Reference Include="Facepunch.System">
+          <HintPath>..\dependencies\Facepunch.System.dll</HintPath>
+        </Reference>
+        <Reference Include="mscorlib">
+          <HintPath>..\dependencies\mscorlib.dll</HintPath>
+        </Reference>
         <Reference Include="Oxide.Core">
             <HintPath>..\dependencies\Oxide.Core.dll</HintPath>
         </Reference>

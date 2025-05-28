@@ -104,6 +104,12 @@ public static class OxideConsole
         Debug.LogFormat(color, obj);
     }
 
+    public static void LogFormat(string format, string color, params object[] args)
+    {
+        string text = format.FormatNoThrow(args);
+        Log(text, color);
+    }
+
     public static void LogAsync(object obj, string color = NORMAL)
     {
         Interface.Oxide?.NextTick(() => Log(obj, color));
