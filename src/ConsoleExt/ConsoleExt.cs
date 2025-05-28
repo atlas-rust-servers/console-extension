@@ -7,7 +7,7 @@ namespace Oxide.Ext.ConsoleExt;
 [UsedImplicitly]
 public class ConsoleExt : Extension
 {
-    private static readonly VersionNumber s_extensionVersion = new(1, 0, 1);
+    private static readonly VersionNumber s_extensionVersion = new(1, 1, 1);
 
     public override string Name => "ConsoleExt";
     public override string Author => "Ilovepatatos";
@@ -16,4 +16,9 @@ public class ConsoleExt : Extension
     public override bool SupportsReloading => true;
 
     public ConsoleExt(ExtensionManager manager) : base(manager) { }
+
+    public override IEnumerable<string> GetPreprocessorDirectives()
+    {
+        yield return "CONSOLE_FRAMEWORK";
+    }
 }
