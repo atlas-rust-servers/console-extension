@@ -104,6 +104,7 @@ public static class OxideConsole
         Debug.LogFormat(color, obj);
     }
 
+    [StringFormatMethod("format")]
     public static void LogFormat(string format, string color, params object[] args)
     {
         string text = format.FormatNoThrow(args);
